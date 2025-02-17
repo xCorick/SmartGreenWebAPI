@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using BCrypt;
+using MongoDB.Driver;
 using SmartGreenAPI.Data.Interfaces;
 using SmartGreenAPI.Model;
 using Microsoft.Extensions.Options;
@@ -27,6 +28,7 @@ namespace SmartGreenAPI.Data.Services
         }
         public async Task<UserModel> CreateUser(UserModel createUser)
         {
+            createUser.Password = BCrypt.Net.BCrypt.HashPassword(createUser.Password);
             await _users.InsertOneAsync(createUser);
             return createUser;
         }
@@ -34,6 +36,7 @@ namespace SmartGreenAPI.Data.Services
         public async Task<UserModel> UpdateUser(UserModel updateUser)
         {
             var filter = Builders<UserModel>.Filter.Eq(u => u.Id, updateUser.Id);
+            updateUser.Password = BCrypt.Net.BCrypt.HashPassword(updateUser.Password);
             var result = await _users.ReplaceOneAsync(filter, updateUser);
 
             if (result.MatchedCount == 0)
@@ -59,9 +62,10 @@ namespace SmartGreenAPI.Data.Services
 
         public async Task ChangePassword(string correo, string password)
         {
+            string passHashed = BCrypt.Net.BCrypt.HashPassword(password);
             //var user = await this.FindByEmail(correo);
             var filter = Builders<UserModel>.Filter.Eq(u => u.Correo, correo);
-            var update = Builders<UserModel>.Update.Set(u => u.Password, password);
+            var update = Builders<UserModel>.Update.Set(u => u.Password, passHashed);
 
             await _users.UpdateOneAsync(filter, update);
         }

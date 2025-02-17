@@ -83,7 +83,7 @@ namespace SmartGreenWebAPI.Controllers
             return Ok(usermodel);
         }
 
-        [HttpPut("UpdateUser/{correo}")]
+        [HttpPut("ChangePassword/{correo}")]
         public async Task<IActionResult> ChangePassword(string correo, string password)
         {
             await _userServices.ChangePassword(correo,password);
@@ -97,6 +97,27 @@ namespace SmartGreenWebAPI.Controllers
         {
             await _userServices.DeleteByEmail(email);
             return Ok();
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(string correo, string pass)
+        {
+            var user = await _userServices.FindByEmail(correo);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            string? hash = user.Password;
+            bool result = BCrypt.Net.BCrypt.Verify(pass, hash);
+
+            if (result)
+            {
+                return Ok(user);
+            }
+            ModelState.AddModelError("Password", "La contraseña no coincide");
+            return BadRequest();
         }
     }
 }
