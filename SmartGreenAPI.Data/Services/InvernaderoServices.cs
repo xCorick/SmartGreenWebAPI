@@ -24,5 +24,15 @@ namespace SmartGreenAPI.Data.Services
             var mongoDB = _client.GetDatabase(_configuration.DataBase);
             _invernadero = mongoDB.GetCollection<InvernaderoModel>("invernaderos");
         }
+
+        public async Task<InvernaderoModel> CreateInvernadero(string id, int tipo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task RegistrarInvernadero(string correo, InvernaderoModel invernadero)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

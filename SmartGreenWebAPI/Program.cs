@@ -21,7 +21,21 @@ builder.Services.AddSingleton((sp =>
 
 builder.Services.AddScoped<UserServices>();
 
+builder.WebHost.UseUrls("http://0.0.0.0:5062");
+
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("AllowFrontEnd", policy =>
+    {
+        policy.AllowAnyOrigin() //aqui pones la url de tu frontend
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+
+});
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -29,6 +43,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowFrontEnd");
 
 app.UseHttpsRedirection();
 

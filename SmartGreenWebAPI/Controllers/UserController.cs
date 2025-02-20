@@ -37,7 +37,7 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // POST api/<UserController>
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> CreateUser([FromBody]UserModel user)
         {
             if (user == null)
