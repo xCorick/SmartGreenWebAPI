@@ -18,5 +18,7 @@ namespace SmartGreenAPI.Data.Interfaces
         public Task<InvernaderoModel> FindById(string id);
 
         public Task DeleteById(string id);
+
+        public Task<List<InvernaderoModel>> FindByUser(string id);
     }
 }

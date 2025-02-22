@@ -40,6 +40,13 @@ namespace SmartGreenWebAPI.Controllers
             return Ok(invernadero); 
         }
 
+        [HttpGet("FindByEmail/{correo}")]
+        public async Task<IActionResult> FindByEmail(string correo)
+        {
+            var invernadero = await _invernaderoServices.FindByUser(correo);
+            return Ok(invernadero);
+        }
+
         // POST api/<InvernaderoController>
         [HttpPost("Create")]
         public async Task<IActionResult> CreateInvernadeo(string id, int tipo)

@@ -72,5 +72,11 @@ namespace SmartGreenAPI.Data.Services
             var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.idInvernadero, id);
             await _invernadero.DeleteOneAsync(filter);
         }
+
+        public async Task<List<InvernaderoModel>> FindByUser(string correo)
+        {
+            var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.UsuCorreo, correo);
+            return await _invernadero.Find(filter).ToListAsync();
+        }
     }
 }
