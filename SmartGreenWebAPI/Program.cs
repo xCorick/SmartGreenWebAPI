@@ -21,6 +21,8 @@ builder.Services.AddSingleton((sp =>
 
 builder.Services.AddScoped<UserServices>();
 
+builder.Services.AddScoped<InvernaderoServices>();
+
 builder.WebHost.UseUrls("http://0.0.0.0:5062");
 
 builder.Services.AddCors(option =>
