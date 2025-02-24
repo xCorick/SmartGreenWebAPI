@@ -19,6 +19,8 @@ namespace SmartGreenAPI.Model
         public string? UsuCorreo { get; set; }
         [BsonElement("NombreInvernadero")]
         public string? NombreInvernadero { get; set; }
+        [BsonElement("Descripcion")]
+        public string? Descripcion { get; set; } = "";
         [BsonElement("TipoInvernadero")]
         public int TipoInvernadero { get; set; }
         [BsonElement("MinHumedad")]
