@@ -2,9 +2,38 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SmartGreenAPI.Data;
 using SmartGreenAPI.Data.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Agregando autenticación JWTBearer
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.RequireHttpsMetadata = false;
+
+        string jwtsecret = builder.Configuration["JwtSettings:Secret"]!;
+
+        SymmetricSecurityKey signingkey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtsecret));
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = signingkey,
+            LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken,TokenValidationParameters validationParameters) =>
+            {
+                return expires.HasValue && expires > DateTime.UtcNow;
+            }
+        };
+    });
+
+builder.Services.AddAuthorization();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -22,6 +51,8 @@ builder.Services.AddSingleton((sp =>
 builder.Services.AddScoped<UserServices>();
 
 builder.Services.AddScoped<InvernaderoServices>();
+
+builder.Services.AddScoped<AuthUserService>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:5062");
 

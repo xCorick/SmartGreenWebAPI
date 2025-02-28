@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGreenAPI.Data.Services;
 using SmartGreenAPI.Model;
@@ -13,15 +14,18 @@ namespace SmartGreenWebAPI.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly UserServices _userServices;
+        private readonly AuthUserService _authUserService;
 
-        public UserController(ILogger<UserController> logger, UserServices userServices)
+        public UserController(ILogger<UserController> logger, UserServices userServices, AuthUserService authUserService)
         {
             _logger = logger;
             _userServices = userServices;
+            _authUserService = authUserService;
         }
 
         // GET: api/<UserController>
-        [HttpGet]
+        [Authorize]
+        [HttpGet("FindAll")]
         public async Task<IActionResult> FindAll()
         {
             var user = await _userServices.FindAll();
@@ -51,6 +55,7 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // PUT api/<UserController>/5
+        [Authorize]
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody]UserModel usermodel)
         {
@@ -82,7 +87,7 @@ namespace SmartGreenWebAPI.Controllers
             var user = await _userServices.UpdateUser(usermodel);
             return Ok(usermodel);
         }
-
+        [Authorize]
         [HttpPut("ChangePassword/{correo}")]
         public async Task<IActionResult> ChangePassword(string correo, string password)
         {
@@ -92,6 +97,7 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // DELETE api/<UserController>/5
+        [Authorize]
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteByEmail(string email)
         {
@@ -112,12 +118,13 @@ namespace SmartGreenWebAPI.Controllers
             string? hash = user.Password;
             bool result = BCrypt.Net.BCrypt.Verify(pass, hash);
 
-            if (result)
+            if (!result)
             {
-                return Ok(user);
+                return BadRequest(new {message = "Contraseña incorrecta"});
             }
-            ModelState.AddModelError("Password", "La contraseña no coincide");
-            return BadRequest();
+            
+            var token = _authUserService.GenerateJwtToken(user);
+            return Ok(new { token, user });
         }
     }
 }
