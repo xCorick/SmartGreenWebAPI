@@ -19,4 +19,8 @@
     <ProjectReference Include="..\SmartGreenAPI.Model\SmartGreenAPI.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AccessManager\" />
+  </ItemGroup>
+
 </Project>

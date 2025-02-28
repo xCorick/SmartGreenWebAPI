@@ -52,6 +52,8 @@ builder.Services.AddScoped<UserServices>();
 
 builder.Services.AddScoped<InvernaderoServices>();
 
+builder.Services.AddScoped<InverStatusServices>();
+
 builder.Services.AddScoped<AuthUserService>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:5062");
