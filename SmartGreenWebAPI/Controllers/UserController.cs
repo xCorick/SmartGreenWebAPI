@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using SmartGreenAPI.Data.Services;
 using SmartGreenAPI.Model;
 
+using SmartGreenAPI.Model.DTOs;
+using SmartGreenWebAPI.Filters;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SmartGreenWebAPI.Controllers
@@ -23,8 +26,14 @@ namespace SmartGreenWebAPI.Controllers
             _authUserService = authUserService;
         }
 
+        [HttpGet("ErrorPrueba")]
+        public IActionResult GenerateError ()
+        {
+            throw new Exception("Error generado");
+        }
+
         // GET: api/<UserController>
-        [Authorize]
+
         [HttpGet("FindAll")]
         public async Task<IActionResult> FindAll()
         {
@@ -59,31 +68,6 @@ namespace SmartGreenWebAPI.Controllers
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody]UserModel usermodel)
         {
-            if (usermodel.Id == null || usermodel.Id == string.Empty)
-            {
-                ModelState.AddModelError("Id","El id no debe ir vacio");
-            }
-            if (usermodel.Correo == null || usermodel.Correo == string.Empty)
-            {
-                ModelState.AddModelError("Correo", "El correo no debe ir vacio");
-            }
-            if (usermodel.Nombre == null || usermodel.Nombre == string.Empty)
-            {
-                ModelState.AddModelError("Nombre", "El nombre no debe ir vacio");
-            }
-            if (usermodel.Celular == null || usermodel.Celular == string.Empty)
-            {
-                ModelState.AddModelError("Celular", "El celular no debe ir vacio");
-            }
-            if (usermodel.Password == null || usermodel.Password == string.Empty)
-            {
-                ModelState.AddModelError("Password", "La contraseña no debe ir vacia");
-            }
-            if (usermodel.UsuarioTipo == null || usermodel.UsuarioTipo == string.Empty)
-            {
-                ModelState.AddModelError("UsuarioTipo", "El tipo de usuario no debe ir vacio");
-            }
-
             var user = await _userServices.UpdateUser(usermodel);
             return Ok(usermodel);
         }
@@ -106,9 +90,9 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(string correo, string pass)
+        public async Task<IActionResult> Login([FromBody] RequestLoginDto request)
         {
-            var user = await _userServices.FindByEmail(correo);
+            var user = await _userServices.FindByEmail(request.Email);
 
             if (user == null)
             {
@@ -116,7 +100,7 @@ namespace SmartGreenWebAPI.Controllers
             }
 
             string? hash = user.Password;
-            bool result = BCrypt.Net.BCrypt.Verify(pass, hash);
+            bool result = BCrypt.Net.BCrypt.Verify(request.Password, hash);
 
             if (!result)
             {
@@ -124,7 +108,7 @@ namespace SmartGreenWebAPI.Controllers
             }
             
             var token = _authUserService.GenerateJwtToken(user);
-            return Ok(new { token, user });
+            return Ok(token);
         }
     }
 }

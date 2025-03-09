@@ -18,6 +18,7 @@ namespace SmartGreenWebAPI.Controllers
             _invernaderoServices = invernaderoServices;
             _logger = logger;
         }
+
         // GET: api/<InvernaderoController>
         [HttpGet("FindAll")]
         public async Task<IActionResult> FindAll()

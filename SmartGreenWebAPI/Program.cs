@@ -5,6 +5,8 @@ using SmartGreenAPI.Data.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SmartGreenWebAPI.Filters;
+using SmartGreenWebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +50,10 @@ builder.Services.AddSingleton((sp =>
     return new MongoClient(config.Connection);
 }));
 
+//builder.Services.AddScoped<ExceptionFilter>();
+
+builder.Services.AddTransient<ExceptionMiddleware>();
+
 builder.Services.AddScoped<UserServices>();
 
 builder.Services.AddScoped<InvernaderoServices>();
@@ -70,7 +76,7 @@ builder.Services.AddCors(option =>
 });
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
