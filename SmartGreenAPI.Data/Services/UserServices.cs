@@ -51,7 +51,8 @@ namespace SmartGreenAPI.Data.Services
         public async Task<UserModel> FindByEmail(string email)
         {
             var filter = Builders<UserModel>.Filter.Eq(u => u.Correo, email);
-            return await _users.Find(filter).FirstAsync();
+            var user = await _users.Find(filter).FirstAsync() ?? throw new Exception("El correo no esta registrado");
+            return user;
         }
 
         public async Task DeleteByEmail(string email)
