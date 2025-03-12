@@ -12,7 +12,7 @@ namespace SmartGreenWebAPI.Middleware
             {
                 await next(context); 
             }
-            catch (MongoException ex)
+            catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex); //Se captura en un objeto en un exception
             }
