@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using SmartGreenAPI.Data.Interfaces;
 using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -33,17 +34,22 @@ namespace SmartGreenAPI.Data.Services
             return createUser;
         }
 
-        public async Task<UserModel> UpdateUser(UserModel updateUser)
+        public async Task<UserModel> UpdateUser(UpdateUserDTO updateUser)
         {
-            var filter = Builders<UserModel>.Filter.Eq(u => u.Id, updateUser.Id);
-            updateUser.Password = BCrypt.Net.BCrypt.HashPassword(updateUser.Password);
-            var result = await _users.ReplaceOneAsync(filter, updateUser);
+            var filter = Builders<UserModel>.Filter.Eq(u => u.Correo, updateUser.Correo);
+
+            var update = Builders<UserModel>.Update
+                .Set(u => u.Nombre, updateUser.Nombre)
+                .Set(u => u.Celular, updateUser.Celular)
+                .Set(u=> u.UsuarioTipo, updateUser.UsuarioTipo);
+
+            var result = await _users.UpdateOneAsync(filter, update);
 
             if (result.MatchedCount == 0)
             {
                 throw new Exception("Usuario no encontrado");
             }
-            return updateUser;
+            return await _users.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<List<UserModel>> FindAll() => await _users.Find(_ => true).ToListAsync(); 

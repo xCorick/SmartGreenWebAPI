@@ -1,4 +1,5 @@
 ﻿using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SmartGreenAPI.Data.Interfaces
     {
         public Task<UserModel> CreateUser(UserModel createUser);
 
-        public Task<UserModel> UpdateUser(UserModel updateUser);
+        public Task<UserModel> UpdateUser(UpdateUserDTO updateUser);
 
         public Task<List<UserModel>> FindAll();
 

@@ -26,11 +26,11 @@ namespace SmartGreenWebAPI.Controllers
             _authUserService = authUserService;
         }
 
-        [HttpGet("ErrorPrueba")]
-        public IActionResult GenerateError ()
-        {
-            throw new Exception("Error generado");
-        }
+        //[HttpGet("ErrorPrueba")]
+        //public IActionResult GenerateError ()
+        //{
+        //    throw new Exception("Error generado");
+        //}
 
         // GET: api/<UserController>
 
@@ -64,12 +64,12 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // PUT api/<UserController>/5
-        [Authorize]
-        [HttpPut("UpdateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody]UserModel usermodel)
+        //[Authorize]
+        [HttpPatch("UpdateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO updateUser)
         {
-            var user = await _userServices.UpdateUser(usermodel);
-            return Ok(usermodel);
+            var user = await _userServices.UpdateUser(updateUser);
+            return Ok(user);
         }
         [Authorize]
         [HttpPut("ChangePassword/{correo}")]
