@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartGreenAPI.Data.Services;
 using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -57,15 +58,21 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // PUT api/<InvernaderoController>/5
-        [HttpPut("RegistrarInvernadero")]
-        public async Task<IActionResult> RegistrarInvernadero([FromBody] InvernaderoModel invernadero)
+        [HttpPost("RegistrarInvernadero")]
+        public async Task<IActionResult> RegistrarInvernadero([FromBody] RequestRegistrarInvernaderoDto invernadero)
         {
-            var inver = await _invernaderoServices.RegistrarInvernadero(invernadero);
-            if (inver == null)
+            
+            var usuarioCorreo = User.Identity.Name; 
+
+
+            var resultado = await _invernaderoServices.RegistrarInvernadero(invernadero, usuarioCorreo);
+
+            if (resultado == null)
             {
-                return NotFound();
+                return BadRequest("Invernadero ya registrado o error al registrar.");
             }
-            return Ok(inver);
+
+            return Ok(resultado); 
         }
 
         // DELETE api/<InvernaderoController>/5
