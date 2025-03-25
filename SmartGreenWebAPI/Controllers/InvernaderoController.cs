@@ -58,14 +58,14 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // PUT api/<InvernaderoController>/5
-        [HttpPost("RegistrarInvernadero")]
-        public async Task<IActionResult> RegistrarInvernadero([FromBody] RequestRegistrarInvernaderoDto invernadero)
+        [HttpPatch("RegistrarInvernadero")]
+        public async Task<IActionResult> RegistrarInvernadero([FromBody] RequestRegistrarInvernaderoDto regInvernadero)
         {
             
             var usuarioCorreo = User.Identity.Name; 
 
 
-            var resultado = await _invernaderoServices.RegistrarInvernadero(invernadero, usuarioCorreo);
+            var resultado = await _invernaderoServices.RegistrarInvernadero(regInvernadero);
 
             if (resultado == null)
             {
