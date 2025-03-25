@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SmartGreenWebAPI.Filters;
 using SmartGreenWebAPI.Middleware;
+using SmartGreenAPI.Data.hub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,8 @@ builder.Services.AddScoped<InverStatusServices>();
 
 builder.Services.AddScoped<AuthUserService>();
 
+builder.Services.AddSignalR();
+
 builder.WebHost.UseUrls("http://0.0.0.0:5062");
 
 builder.Services.AddCors(option =>
@@ -76,6 +79,8 @@ builder.Services.AddCors(option =>
 });
 
 var app = builder.Build();
+
+app.MapHub<InverStatusHub>("/inverStatusHub");
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
