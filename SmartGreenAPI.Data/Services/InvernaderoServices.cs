@@ -2,15 +2,17 @@
 using MongoDB.Driver;
 using SmartGreenAPI.Data.Interfaces;
 using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartGreenAPI.Data.Services
 {
-    public class InvernaderoServices : IInvernaderoServices
+    public class InvernaderoServices 
     {
         private readonly IMongoCollection<InvernaderoModel> _invernadero;
         private MongoConfiguration _configuration;
@@ -37,27 +39,24 @@ namespace SmartGreenAPI.Data.Services
             return invernadero;
         }
 
-        public async Task<InvernaderoModel?> RegistrarInvernadero(InvernaderoModel invernadero)
+        public async Task<InvernaderoModel> RegistrarInvernadero(RequestRegistrarInvernaderoDto regInvernadero)
         {
-            var findInver = await this.FindById(invernadero.idInvernadero!);
+            var filter = Builders<InvernaderoModel>.Filter.Eq(i => i.idInvernadero, regInvernadero.IdInvernadero);
 
-            if (findInver == null || findInver.UsuCorreo != null)
+            var updateInvernadero = Builders<InvernaderoModel>.Update
+            .Set(i => i.UsuCorreo, regInvernadero.UsuCorreo)
+            .Set(i => i.NombreInvernadero, regInvernadero.NombreInvernadero)
+            .Set(i => i.Descripcion, regInvernadero.Descripcion);
+
+            var result = await  _invernadero.UpdateOneAsync(filter, updateInvernadero);
+
+            if (result.MatchedCount == 0)
             {
-                return null;
+                throw new Exception("El invernadero no existe.");
             }
-            
-            invernadero.TipoInvernadero = findInver.TipoInvernadero;
-            invernadero.idInvernadero = findInver.idInvernadero;
-            invernadero.id = findInver.id;
-            invernadero.Started = false;
+            return await _invernadero.Find(filter).FirstOrDefaultAsync();
 
-            var filter = Builders<InvernaderoModel>.Filter.Eq(i => i.idInvernadero, invernadero.idInvernadero);
-
-            var result = await _invernadero.ReplaceOneAsync(filter, invernadero);
-
-            return invernadero;
         }
-
         public async Task<List<InvernaderoModel>> FindAll() => await _invernadero.Find(_ => true).ToListAsync();
 
         public async Task<InvernaderoModel?> FindById(string id)
@@ -66,7 +65,6 @@ namespace SmartGreenAPI.Data.Services
             return await _invernadero.Find(filter).FirstOrDefaultAsync();
              
         }
-
         public async Task DeleteById(string id)
         {
             var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.idInvernadero, id);
