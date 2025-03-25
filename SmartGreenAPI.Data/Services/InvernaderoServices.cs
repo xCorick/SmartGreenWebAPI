@@ -5,6 +5,7 @@ using SmartGreenAPI.Model;
 using SmartGreenAPI.Model.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,28 +39,23 @@ namespace SmartGreenAPI.Data.Services
             return invernadero;
         }
 
-        public async Task<RequestRegistrarInvernaderoDto?> RegistrarInvernadero(RequestRegistrarInvernaderoDto invernadero, string? usuarioCorreo)
+        public async Task<InvernaderoModel> RegistrarInvernadero(RequestRegistrarInvernaderoDto regInvernadero)
         {
-            var findInver = await this.FindById(invernadero.IdInvernadero!);
+            var filter = Builders<InvernaderoModel>.Filter.Eq(i => i.idInvernadero, regInvernadero.IdInvernadero);
 
-             if (findInver == null) 
-            {
-                var nuevoInvernadero = new InvernaderoModel
-                {
-                    idInvernadero = invernadero.IdInvernadero,
-                    NombreInvernadero = invernadero.NombreInvernadero,
-                    Descripcion = invernadero.Descripcion,
-                    UsuCorreo = invernadero.UsuCorreo
-                };
+            var updateInvernadero = Builders<InvernaderoModel>.Update
+            .Set(i => i.UsuCorreo, regInvernadero.UsuCorreo)
+            .Set(i => i.NombreInvernadero, regInvernadero.NombreInvernadero)
+            .Set(i => i.Descripcion, regInvernadero.Descripcion);
 
-                
-                await _invernadero.InsertOneAsync(nuevoInvernadero);
-                return invernadero;
-            }
-            else
+            var result = await  _invernadero.UpdateOneAsync(filter, updateInvernadero);
+
+            if (result.MatchedCount == 0)
             {
-                return null;
+                throw new Exception("El invernadero no existe.");
             }
+            return await _invernadero.Find(filter).FirstOrDefaultAsync();
+
         }
         public async Task<List<InvernaderoModel>> FindAll() => await _invernadero.Find(_ => true).ToListAsync();
 
