@@ -1,13 +1,11 @@
+using System.Text;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using SmartGreenAPI.Data;
-using SmartGreenAPI.Data.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using SmartGreenWebAPI.Filters;
-using SmartGreenWebAPI.Middleware;
 using SmartGreenAPI.Data.hub;
+using SmartGreenAPI.Data.Services;
+using SmartGreenWebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +27,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = signingkey,
-            LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken,TokenValidationParameters validationParameters) =>
+            LifetimeValidator = (DateTime? _, DateTime? expires, SecurityToken _,TokenValidationParameters _) =>
             {
                 return expires.HasValue && expires > DateTime.UtcNow;
             }

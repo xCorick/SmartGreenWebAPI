@@ -81,7 +81,7 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // DELETE api/<UserController>/5
-        [Authorize]
+        //[Authorize]
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteByEmail(string email)
         {
