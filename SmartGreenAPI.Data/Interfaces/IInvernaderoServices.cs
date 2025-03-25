@@ -12,7 +12,7 @@ namespace SmartGreenAPI.Data.Interfaces
     {
         public Task<InvernaderoModel> CreateInvernadero(string id, int tipo);
 
-        public Task<RequestRegistrarInvernaderoDto> RegistrarInvernadero(RequestRegistrarInvernaderoDto invernadero, string? usuarioCorreo);
+        public Task<InvernaderoModel> RegistrarInvernadero(RequestRegistrarInvernaderoDto invernadero);
 
         public Task<List<InvernaderoModel>> FindAll();
 
