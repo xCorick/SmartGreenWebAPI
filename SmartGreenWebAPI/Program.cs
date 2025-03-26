@@ -78,7 +78,7 @@ builder.Services.AddCors(option =>
 
 var app = builder.Build();
 
-//app.MapHub<InverStatusHub>("/inverStatusHub");
+app.MapHub<InverStatusHub>("/inverStatusHub");
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
