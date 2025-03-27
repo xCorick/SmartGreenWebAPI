@@ -1,22 +1,15 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics.CodeAnalysis;
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace SmartGreenAPI.Model
+namespace SmartGreenAPI.Model.DTOs
 {
-    public class UserModel
+    public class CreateUserDTO
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-        
-
         [BsonElement("Correo")]
         [Required(ErrorMessage = "El correo es requerido.")]
         [EmailAddress(ErrorMessage = "El correo no es valido.")]
@@ -37,8 +30,6 @@ namespace SmartGreenAPI.Model
         public string? Password { get; set; }
         [BsonElement("UsuarioTipo")]
         [Required(ErrorMessage = "El tipo de usuario es requerido.")]
-        public string? UsuarioTipo  { get; set; }
-        [BsonElement("Access")]
-        public AccessModel? Access { get; set; }
+        public string? UsuarioTipo { get; set; }
     }
 }

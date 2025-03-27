@@ -27,11 +27,21 @@ namespace SmartGreenAPI.Data.Services
             var mongoDB = _client.GetDatabase(_configuration.DataBase);
             _users = mongoDB.GetCollection<UserModel>("usuarios");
         }
-        public async Task<UserModel> CreateUser(UserModel createUser)
+        public async Task<UserModel> CreateUser(CreateUserDTO createUser)
         {
             createUser.Password = BCrypt.Net.BCrypt.HashPassword(createUser.Password);
-            await _users.InsertOneAsync(createUser);
-            return createUser;
+
+            UserModel userCreated = new UserModel
+            {
+                Correo = createUser.Correo,
+                Nombre = createUser.Nombre,
+                Celular = createUser.Celular,
+                Password = createUser.Password,
+                UsuarioTipo = createUser.UsuarioTipo
+            };
+
+            await _users.InsertOneAsync(userCreated);
+            return userCreated;
         }
 
         public async Task<UserModel> UpdateUser(UpdateUserDTO updateUser)

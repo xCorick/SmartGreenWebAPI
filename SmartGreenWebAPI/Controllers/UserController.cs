@@ -34,6 +34,7 @@ namespace SmartGreenWebAPI.Controllers
 
         // GET: api/<UserController>
 
+        //[Authorize]
         [HttpGet("FindAll")]
         public async Task<IActionResult> FindAll()
         {
@@ -51,7 +52,7 @@ namespace SmartGreenWebAPI.Controllers
 
         // POST api/<UserController>
         [HttpPost("Register")]
-        public async Task<IActionResult> CreateUser([FromBody]UserModel user)
+        public async Task<IActionResult> CreateUser([FromBody]CreateUserDTO user)
         {
             if (user == null)
             {
@@ -90,6 +91,7 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         [HttpPost("Login")]
+
         public async Task<IActionResult> Login([FromBody] RequestLoginDto request)
         {
             var user = await _userServices.FindByEmail(request.Email);
