@@ -17,7 +17,7 @@ namespace SmartGreenWebAPI.Middleware
                 await HandleExceptionAsync(context, ex); //Se captura en un objeto en un exception
             }
         }
-
+    
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             context.Response.ContentType = "application/json"; //Respuesta en formato JSON
