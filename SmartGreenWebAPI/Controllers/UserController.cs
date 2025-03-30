@@ -94,19 +94,13 @@ namespace SmartGreenWebAPI.Controllers
         {
             var user = await _userServices.FindByEmail(request.Email);
 
-            if (user == null)
-            {
-                return BadRequest();
-            }
+            if (user == null) throw new Exception("Credenciales incorrectas.");
 
             string? hash = user.Password;
             bool result = BCrypt.Net.BCrypt.Verify(request.Password, hash);
 
-            if (!result)
-            {
-                return BadRequest(new {message = "Contraseña incorrecta"});
-            }
-            
+            if (!result) throw new Exception("Credenciales incorrectas.");
+
             var token = _authUserService.GenerateJwtToken(user);
             return Ok(token);
         }

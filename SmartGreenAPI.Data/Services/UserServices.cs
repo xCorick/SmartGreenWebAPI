@@ -45,10 +45,7 @@ namespace SmartGreenAPI.Data.Services
 
             var result = await _users.UpdateOneAsync(filter, update);
 
-            if (result.MatchedCount == 0)
-            {
-                throw new Exception("Usuario no encontrado");
-            }
+            if (result.MatchedCount == 0) throw new Exception("Usuario no encontrado");
             return await _users.Find(filter).FirstOrDefaultAsync();
         }
 
@@ -57,7 +54,7 @@ namespace SmartGreenAPI.Data.Services
         public async Task<UserModel> FindByEmail(string email)
         {
             var filter = Builders<UserModel>.Filter.Eq(u => u.Correo, email);
-            var user = await _users.Find(filter).FirstAsync() ?? throw new Exception("El correo no esta registrado");
+            UserModel? user = await _users.Find(filter).FirstAsync() ?? null;
             return user;
         }
 
