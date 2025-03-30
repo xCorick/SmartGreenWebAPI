@@ -8,10 +8,11 @@ using System.Text;
 using SmartGreenWebAPI.Filters;
 using SmartGreenWebAPI.Middleware;
 using SmartGreenAPI.Data.hub;
+using SmartGreenAPI.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Agregando autenticación JWTBearer
+// Agregando autenticaciï¿½n JWTBearer
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -41,6 +42,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddTransient<ISendEmailService, SendEmailService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
