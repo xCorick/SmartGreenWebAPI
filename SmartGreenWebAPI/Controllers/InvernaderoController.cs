@@ -82,5 +82,26 @@ namespace SmartGreenWebAPI.Controllers
             await _invernaderoServices.DeleteById(id);
             return Ok();
         }
+
+        [HttpPatch("ToggleStatus/{id}")]
+
+        public async Task<IActionResult> ToggleStatus(string id)
+        {
+            var result = await _invernaderoServices.ToggleStatus(id);
+            return Ok(result);
+        }
+
+        [HttpPatch("ChangeInverParameters")]
+
+        public async Task<IActionResult> ChangeInverParameters([FromBody] ChangeInverParameters parameters)
+        {
+            var result = await _invernaderoServices.ChangeParameters(parameters);
+
+            if (result != null )
+            {
+                return Ok(result);
+            }
+            return BadRequest();
+        }
     }
 }

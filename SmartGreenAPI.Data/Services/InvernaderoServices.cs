@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using SmartGreenAPI.Data.Interfaces;
 using SmartGreenAPI.Model;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartGreenAPI.Data.Services
 {
-    public class InvernaderoServices 
+    public class InvernaderoServices : IInvernaderoServices
     {
         private readonly IMongoCollection<InvernaderoModel> _invernadero;
         private MongoConfiguration _configuration;
@@ -75,6 +76,45 @@ namespace SmartGreenAPI.Data.Services
         {
             var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.UsuCorreo, correo);
             return await _invernadero.Find(filter).ToListAsync();
+        }
+        public async Task<int> ToggleStatus(string id)
+        {
+            var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.idInvernadero, id);
+
+            var projection = Builders<InvernaderoModel>.Projection.Include(u => u.Started);
+
+            var result = await _invernadero.Find(filter).Project<BsonDocument>(projection).FirstOrDefaultAsync();
+
+            if (result == null || !result.Contains("Started"))
+            {
+                return -1;
+            }
+            bool started = result["Started"].AsBoolean;
+            bool newStatus = !started;
+
+            var update = Builders<InvernaderoModel>.Update.Set(u => u.Started, newStatus);
+            var updateResult = await _invernadero.UpdateOneAsync(filter, update);
+
+            if (updateResult.ModifiedCount == 0)
+            {
+                return -1;
+            }
+            return 1;
+        }
+        public async Task<InvernaderoModel> ChangeParameters(ChangeInverParameters parameters)
+        {
+            var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.idInvernadero, parameters.idInvernadero);
+            var update = Builders<InvernaderoModel>.Update
+            .Set(u => u.MinHumedad, parameters.MinHumedad)
+            .Set(u => u.MaxHumedad, parameters.MaxHumedad)
+            .Set(u => u.MinTemperatura, parameters.MinTemperatura)
+            .Set(u => u.MaxTemperatura, parameters.MaxTemperatura);
+            var result = await _invernadero.UpdateOneAsync(filter, update);
+            if (result.MatchedCount == 0)
+            {
+                throw new Exception("El invernadero no existe.");
+            }
+            return await _invernadero.Find(filter).FirstOrDefaultAsync();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace SmartGreenAPI.Data.Interfaces
 {
     public interface IUserServices
     {
-        public Task<UserModel> CreateUser(UserModel createUser);
+        public Task<UserModel> CreateUser(CreateUserDTO createUser);
 
         public Task<UserModel> UpdateUser(UpdateUserDTO updateUser);
 

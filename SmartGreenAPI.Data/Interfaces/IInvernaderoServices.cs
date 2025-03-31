@@ -1,4 +1,5 @@
 ﻿using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SmartGreenAPI.Data.Interfaces
     {
         public Task<InvernaderoModel> CreateInvernadero(string id, int tipo);
 
-        public Task<InvernaderoModel> RegistrarInvernadero(InvernaderoModel invernadero);
+        public Task<InvernaderoModel> RegistrarInvernadero(RequestRegistrarInvernaderoDto invernadero);
 
         public Task<List<InvernaderoModel>> FindAll();
 
@@ -20,5 +21,8 @@ namespace SmartGreenAPI.Data.Interfaces
         public Task DeleteById(string id);
 
         public Task<List<InvernaderoModel>> FindByUser(string id);
+        public Task<int> ToggleStatus(string id);
+
+        public Task<InvernaderoModel> ChangeParameters(ChangeInverParameters parameters);
     }
 }
