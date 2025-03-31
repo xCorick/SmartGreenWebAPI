@@ -22,5 +22,7 @@ namespace SmartGreenAPI.Data.Interfaces
 
         public Task<List<InvernaderoModel>> FindByUser(string id);
         public Task<int> ToggleStatus(string id);
+
+        public Task<InvernaderoModel> ChangeParameters(ChangeInverParameters parameters);
     }
 }

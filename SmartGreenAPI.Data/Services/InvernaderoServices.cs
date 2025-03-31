@@ -101,5 +101,20 @@ namespace SmartGreenAPI.Data.Services
             }
             return 1;
         }
+        public async Task<InvernaderoModel> ChangeParameters(ChangeInverParameters parameters)
+        {
+            var filter = Builders<InvernaderoModel>.Filter.Eq(u => u.idInvernadero, parameters.idInvernadero);
+            var update = Builders<InvernaderoModel>.Update
+            .Set(u => u.MinHumedad, parameters.MinHumedad)
+            .Set(u => u.MaxHumedad, parameters.MaxHumedad)
+            .Set(u => u.MinTemperatura, parameters.MinTemperatura)
+            .Set(u => u.MaxTemperatura, parameters.MaxTemperatura);
+            var result = await _invernadero.UpdateOneAsync(filter, update);
+            if (result.MatchedCount == 0)
+            {
+                throw new Exception("El invernadero no existe.");
+            }
+            return await _invernadero.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }
