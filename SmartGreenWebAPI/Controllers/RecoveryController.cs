@@ -10,9 +10,12 @@ namespace SmartGreenWebAPI.Controllers
     public class RecoveryController : ControllerBase
     {
         private readonly IRecoveryServices _recovery;
-        public RecoveryController(IRecoveryServices recovery)
+        private readonly ISendEmailService _send;
+
+        public RecoveryController(IRecoveryServices recovery, ISendEmailService send)
         {
             _recovery = recovery;
+            _send = send;
         }
 
         [HttpPost("recovery")]
@@ -21,7 +24,10 @@ namespace SmartGreenWebAPI.Controllers
             var token = await _recovery.CreateRecoveryTokenAsync(email);
 
             if (string.IsNullOrEmpty(token)) throw new Exception("El correo es invalido");
-            return Ok(new {Token = token});
+
+            await _send.SendEmailAsync(email, token);
+            return Ok();
+            //return Ok(new {Token = token});
         }
 
         [HttpPost("validate")]

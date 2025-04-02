@@ -11,5 +11,7 @@ namespace SmartGreenAPI.Data.Interfaces
     public interface ISendEmailService
     {
         Task SendEmail(EmailModel emailModel);
+
+        Task SendEmailAsync(string token, string email);
     }
 }
