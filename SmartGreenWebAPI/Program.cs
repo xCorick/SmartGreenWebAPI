@@ -35,6 +35,8 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+builder.Services.AddScoped<IRecoveryServices, RecoveryService>();
+builder.Services.AddMemoryCache();
 builder.Services.AddAuthorization();
 // Add services to the container.
 
