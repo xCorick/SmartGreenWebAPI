@@ -1,19 +1,15 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
-namespace SmartGreenAPI.Model
+namespace SmartGreenAPI.Model.DTOs
 {
-    public class InverStatusModel
+    public class PostInverStatusDTO
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? id { get; set; }
-        [BsonElement("IdInvernadero")]
         public string? idInvernadero { get; set; }
         [BsonElement("CurrentHumedad")]
         public double CurrentHumedad { get; set; }
@@ -29,7 +25,5 @@ namespace SmartGreenAPI.Model
         public double maxTemperatura { get; set; }
         [BsonElement("minTemperatura")]
         public double minTemperatura { get; set; }
-        [BsonElement("Fecha")]
-        public DateTime Fecha { get; set; } = DateTime.UtcNow;
     }
 }

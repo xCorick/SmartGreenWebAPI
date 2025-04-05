@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartGreenAPI.Data.Services;
 using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using System.Runtime.CompilerServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -37,7 +38,7 @@ namespace SmartGreenWebAPI.Controllers
 
         // POST api/<InverStatusController>
         [HttpPost]
-        public async Task<IActionResult> PostInverStatus([FromBody] InverStatusModel inverStatus)
+        public async Task<IActionResult> PostInverStatus([FromBody] PostInverStatusDTO inverStatus)
         {
             var status = await _inverStatusServices.PostInverStatus(inverStatus);
 
