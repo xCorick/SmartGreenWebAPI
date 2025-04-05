@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using SmartGreenAPI.Data.hub;
 using SmartGreenAPI.Data.Interfaces;
 using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,14 +39,27 @@ namespace SmartGreenAPI.Data.Services
             return result;
         }
 
-        public async Task<InverStatusModel> PostInverStatus(InverStatusModel inverStatus)
+        public async Task<InverStatusModel> PostInverStatus(PostInverStatusDTO inverStatus)
         {
-            await _inverStatus.InsertOneAsync(inverStatus);
+            var inverStatusModel = new InverStatusModel
+            {
+                id = "",
+                idInvernadero = inverStatus.idInvernadero,
+                CurrentHumedad = inverStatus.CurrentHumedad,
+                CurrentTemperatura = inverStatus.CurrentTemperatura,
+                CurrentLuz = inverStatus.CurrentLuz,
+                maxHumedad = inverStatus.maxHumedad,
+                minHumedad = inverStatus.minHumedad,
+                maxTemperatura = inverStatus.maxTemperatura,
+                minTemperatura = inverStatus.minTemperatura,
+                Fecha = DateTime.UtcNow
+            };
+            await _inverStatus.InsertOneAsync(inverStatusModel);
 
             await _hubContext.Clients.Group(inverStatus.idInvernadero!)
                 .SendAsync("ReceiveStatus", inverStatus);
 
-            return inverStatus;
+            return inverStatusModel;
         }
     }
 }

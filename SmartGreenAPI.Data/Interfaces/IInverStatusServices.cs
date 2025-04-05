@@ -1,4 +1,5 @@
 ﻿using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,6 @@ namespace SmartGreenAPI.Data.Interfaces
 
         public Task<List<InverStatusModel>> GetAllInverStatusById(string idInvernadero);
 
-        public Task<InverStatusModel> PostInverStatus(InverStatusModel inverStatus);
+        public Task<InverStatusModel> PostInverStatus(PostInverStatusDTO inverStatus);
     }
 }
