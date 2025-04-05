@@ -37,7 +37,7 @@ namespace SmartGreenAPI.Data.Services
                     Credentials = new NetworkCredential(emailSender, password)
                 };
 
-                var url = "https://music.youtube.com/watch?v=iggmiF7DNoM&list=RDAMVMZKjhKuDCt6A";
+                var url = $"https://smart-green-angular-p7d8.vercel.app/recovery2?token={token}";
                 var body = $"Para continuar con la recuperación de tu contraseña, haz clic en el siguiente enlace: <a href=\"{url}\">Recuperar mi contraseña</a>";
 
 

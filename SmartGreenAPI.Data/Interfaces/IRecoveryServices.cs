@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 
 namespace SmartGreenAPI.Data.Interfaces
 {
@@ -10,7 +12,7 @@ namespace SmartGreenAPI.Data.Interfaces
     {
         Task<string> CreateRecoveryTokenAsync(string email);
         Task<bool> ValidateTokenAsync(string token);
-        Task<bool> ChangePasswordAsync(string token, string newPassword);
+        Task<bool> ChangePasswordAsync(ChangePasswordDto dto);
 
     }
 }

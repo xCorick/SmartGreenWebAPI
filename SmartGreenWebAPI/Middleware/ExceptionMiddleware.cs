@@ -17,13 +17,13 @@ namespace SmartGreenWebAPI.Middleware
                 Action? accion = ex switch
                 {
                     var x when x is TimeoutException => async () => await HandleExceptionAsync(context, new Exception("Compruebe su conexión de internet. Vuelva a intentarlo más tarde.")),
-                    var x when x is MongoConnectionException => async() => await HandleExceptionAsync(context, new Exception("Error del servidor. Intende de nuevo más tarde.")),
-                    _ => null
-                    
+                    var x when x is MongoConnectionException => async () => await HandleExceptionAsync(context, new Exception("Error del servidor. Intente de nuevo más tarde.")),
+                    _ => async () => await HandleExceptionAsync(context, new Exception("Ocurrió un error inesperado.")) 
                 };
-                if (accion != null)  accion();
-                if(ex is InvalidOperationException) await HandleExceptionAsync(context, new  Exception("Favor de verficar los datos ingresar."));
-                await HandleExceptionAsync(context, ex); //Se captura en un objeto en un exception
+
+                 accion();
+                if (ex is InvalidOperationException)
+                    await HandleExceptionAsync(context, new Exception("Favor de verificar los datos ingresados."));
             }
         }
     
@@ -33,8 +33,10 @@ namespace SmartGreenWebAPI.Middleware
             context.Response.ContentType = "application/json"; //Respuesta en formato JSON
             context.Response.StatusCode = ex switch
             {
-                var x when ex is TimeoutException or MongoConnectionException => 500
-            };  
+                var x when ex is TimeoutException or MongoConnectionException => 500,
+                var x when ex is InvalidOperationException => 400,
+                _ => 500
+            };
 
             var respose = new
             {

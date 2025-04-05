@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace SmartGreenAPI.Model.DTOs
 {
-    public class ChangePasseordDto
+    public class ChangePasswordDto
     {
         public string Token { get; set; }
         [Required]
         [MinLength(8, ErrorMessage = "La contraseña debe tener mínimo 8 caracteres.")]
         public string NewPassword { get; set; }
+        [Compare("NewPassword", ErrorMessage = "Las contraseñas no coinciden.")]
+        public string ConfirmPassword { get; set; }
     }
 }

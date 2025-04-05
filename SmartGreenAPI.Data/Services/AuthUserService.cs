@@ -41,5 +41,28 @@ namespace SmartGreenAPI.Data.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public string GenerateRecoveryToken(string email)
+        {
+            string secret = _configuration["JwtSettings:Secret"]!;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, email!),
+            new Claim("purpose", "recovery"),  
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30),  
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }
+
