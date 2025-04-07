@@ -117,5 +117,19 @@ namespace SmartGreenAPI.Data.Services
                 throw;
             }
         }
+        public async Task<List<StatsInvernaderos>> FindAllStats()
+        {
+            var allStats = await _stats.Find(_ => true).ToListAsync();
+
+            var grupo = allStats
+                .GroupBy(stat => stat.idInvernadero)
+                .Select(group => new StatsInvernaderos
+                {
+                    idInvernadero = group.Key,
+                    stats = group.ToList()
+                }).ToList();
+
+            return grupo;
+        }
     }
 }

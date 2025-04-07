@@ -10,5 +10,7 @@ namespace SmartGreenAPI.Data.Interfaces
     public interface IStatsService
     {
         public Task<List<DailyStat>> SetDailyAVG();
+
+        public Task<List<StatsInvernaderos>> FindAllStats();
     }
 }

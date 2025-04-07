@@ -19,17 +19,11 @@ namespace SmartGreenWebAPI.Controllers
         }
 
         // GET: api/<DailyStatController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("GetAllStats")]
+        public async Task<IActionResult> FindAllStats()
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<DailyStatController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            var result = await _statsService.FindAllStats();
+            return Ok(result);
         }
 
         // POST api/<DailyStatController>
@@ -39,18 +33,6 @@ namespace SmartGreenWebAPI.Controllers
             var respuesta = await _statsService.SetDailyAVG();
 
             return Ok(respuesta);
-        }
-
-        // PUT api/<DailyStatController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<DailyStatController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
