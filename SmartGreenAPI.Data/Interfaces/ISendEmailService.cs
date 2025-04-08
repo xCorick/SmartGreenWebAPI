@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using SmartGreenAPI.Data;
 
 using SmartGreenAPI.Model;
+using SmartGreenAPI.Model.DTOs;
 namespace SmartGreenAPI.Data.Interfaces
 {
     public interface ISendEmailService
     {
-        Task SendEmail(EmailModel emailModel);
+        Task SendEmailWithCode(string email, string code);
 
         Task SendEmailAsync(string token, string email);
     }

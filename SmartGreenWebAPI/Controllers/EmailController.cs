@@ -16,11 +16,11 @@ namespace SmartGreenWebAPI.Controllers
             _sendEmailService = sendEmailService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult>Send(EmailModel emailModel)
-        {
-            await _sendEmailService.SendEmail(emailModel);
-            return Ok();
-        }
+        //[HttpPost]
+        //public async Task<ActionResult>Send(int code, string email)
+        //{
+        //    await _sendEmailService.SendEmailWithCode(code, email);
+        //    return Ok();
+        //}
     }
 }

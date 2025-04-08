@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SmartGreenAPI.Model.DTOs
 {
-    public class ChangePasswordDto
+    public class ChangePassDto
     {
-        public string Token { get; set; }
+        public string Code { get; set; }
         public string Email { get; set; }
         [Required]
         [MinLength(8, ErrorMessage = "La contraseña debe tener mínimo 8 caracteres.")]
