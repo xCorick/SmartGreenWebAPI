@@ -66,6 +66,8 @@ builder.Services.AddScoped<InverStatusServices>();
 
 builder.Services.AddScoped<AuthUserService>();
 
+builder.Services.AddScoped<StatsService>();
+
 builder.Services.AddSignalR();
 
 builder.WebHost.UseUrls("http://0.0.0.0:5062");
@@ -90,12 +92,13 @@ app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI(c =>
-  {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartGreenWebAPI v1");
-    c.RoutePrefix = string.Empty; // Para que Swagger se abra en la raíz
-  });
+    app.UseHttpsRedirection();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartGreenWebAPI v1");
+        c.RoutePrefix = string.Empty; // Para que Swagger se abra en la raíz
+    });
 }
 
 
